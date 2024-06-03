@@ -1,0 +1,151 @@
+Test Case 0: Initial State with No Operations
+
+Cycle: 0
+
+
+
+dut->trans_valid_i = 0;
+dut->trans_addr_i = 0;
+dut->trans_we_i = 0;
+dut->trans_be_i = 0;
+dut->trans_wdata_i = 0;
+dut->trans_atop_i = 0;
+dut->obi_gnt_i = 0;
+dut->obi_rdata_i = 0;
+dut->obi_rvalid_i = 0;
+dut->obi_err_i = 0;
+
+Purpose: Ensure the DUT starts in a known state.
+Expected Output: All outputs should be inactive or zero. trans_ready_o should be 1 indicating readiness to accept new transactions. resp_valid_o and resp_err_o should be 0.
+Test Case 1: Issue a Valid Transaction (Write) and Grant It Immediately
+
+Cycle: 1
+
+
+
+dut->trans_valid_i = 1;
+dut->trans_addr_i = 0x1000;
+dut->trans_we_i = 1;
+dut->trans_be_i = 0xF;
+dut->trans_wdata_i = 0xDEADBEEF;
+dut->trans_atop_i = 0;
+dut->obi_gnt_i = 1;
+dut->obi_rdata_i = 0;
+dut->obi_rvalid_i = 0;
+dut->obi_err_i = 0;
+
+Purpose: Verify that the interface correctly processes a write transaction.
+Expected Output: trans_ready_o should be 1. obi_req_o should be 1, indicating a request is sent to the OBI interface. obi_addr_o, obi_we_o, obi_be_o, obi_wdata_o, and obi_atop_o should reflect the input values. resp_valid_o and resp_err_o should be 0.
+Test Case 2: Issue a Valid Transaction (Read) and Grant It Immediately
+
+Cycle: 2
+
+
+
+dut->trans_valid_i = 1;
+dut->trans_addr_i = 0x2000;
+dut->trans_we_i = 0;
+dut->trans_be_i = 0xF;
+dut->trans_wdata_i = 0;
+dut->trans_atop_i = 0;
+dut->obi_gnt_i = 1;
+dut->obi_rdata_i = 0;
+dut->obi_rvalid_i = 0;
+dut->obi_err_i = 0;
+
+Purpose: Verify that the interface correctly processes a read transaction.
+Expected Output: trans_ready_o should be 1. obi_req_o should be 1. obi_addr_o, obi_we_o, obi_be_o, obi_wdata_o, and obi_atop_o should reflect the input values. resp_valid_o and resp_err_o should be 0.
+Test Case 3: Return a Valid Read Response
+
+Cycle: 3
+
+
+dut->trans_valid_i = 0;
+dut->trans_addr_i = 0;
+dut->trans_we_i = 0;
+dut->trans_be_i = 0;
+dut->trans_wdata_i = 0;
+dut->trans_atop_i = 0;
+dut->obi_gnt_i = 0;
+dut->obi_rdata_i = 0xCAFEBABE;
+dut->obi_rvalid_i = 1;
+dut->obi_err_i = 0;
+
+Purpose: Verify that the interface correctly processes a valid read response.
+Expected Output: resp_valid_o should be 1, resp_rdata_o should be 0xCAFEBABE, and resp_err_o should be 0.
+Test Case 4: Issue Another Valid Transaction (Write) but Do Not Grant It Immediately
+
+Cycle: 4
+
+
+
+dut->trans_valid_i = 1;
+dut->trans_addr_i = 0x3000;
+dut->trans_we_i = 1;
+dut->trans_be_i = 0xF;
+dut->trans_wdata_i = 0x12345678;
+dut->trans_atop_i = 0;
+dut->obi_gnt_i = 0;
+dut->obi_rdata_i = 0;
+dut->obi_rvalid_i = 0;
+dut->obi_err_i = 0;
+
+Purpose: Verify that the interface correctly handles a write transaction that is not granted immediately.
+Expected Output: trans_ready_o should be 0, indicating that the transaction is pending. obi_req_o should be 1, but other OBI signals should remain stable as the transaction is not granted.
+Test Case 5: Grant the Pending Transaction
+
+Cycle: 5
+
+
+
+dut->trans_valid_i = 1;
+dut->trans_addr_i = 0x3000;
+dut->trans_we_i = 1;
+dut->trans_be_i = 0xF;
+dut->trans_wdata_i = 0x12345678;
+dut->trans_atop_i = 0;
+dut->obi_gnt_i = 1;
+dut->obi_rdata_i = 0;
+dut->obi_rvalid_i = 0;
+dut->obi_err_i = 0;
+
+Purpose: Verify that the interface correctly processes the pending write transaction when it is granted.
+Expected Output: trans_ready_o should be 1. obi_req_o should be 1, and other OBI signals should reflect the input values.
+Test Case 6: Issue Another Valid Transaction (Read) and Return an Error Response
+
+Cycle: 6
+
+
+
+dut->trans_valid_i = 1;
+dut->trans_addr_i = 0x4000;
+dut->trans_we_i = 0;
+dut->trans_be_i = 0xF;
+dut->trans_wdata_i = 0;
+dut->trans_atop_i = 0;
+dut->obi_gnt_i = 1;
+dut->obi_rdata_i = 0;
+dut->obi_rvalid_i = 0;
+dut->obi_err_i = 0;
+
+Purpose: Verify that the interface correctly processes a read transaction and prepares for a potential error response.
+Expected Output: trans_ready_o should be 1. obi_req_o should be 1, and other OBI signals should reflect the input values. resp_valid_o and resp_err_o should be 0.
+Test Case 7: Return an Error Response for the Read Transaction
+
+Cycle: 7
+
+
+
+dut->trans_valid_i = 0;
+dut->trans_addr_i = 0;
+dut->trans_we_i = 0;
+dut->trans_be_i = 0;
+dut->trans_wdata_i = 0;
+dut->trans_atop_i = 0;
+dut->obi_gnt_i = 0;
+dut->obi_rdata_i = 0;
+dut->obi_rvalid_i = 1;
+dut->obi_err_i = 1;
+
+Purpose: Verify that the interface correctly processes an error response.
+Expected Output: resp_valid_o should be 1, resp_rdata_o should be 0, and resp_err_o should be 1.

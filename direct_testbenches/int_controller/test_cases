@@ -1,0 +1,88 @@
+Test Case 0: Initial State with No Interrupts
+
+Cycle: 0
+
+
+
+dut->irq_i = 0;
+dut->irq_sec_i = 0;
+dut->mie_bypass_i = 0;
+dut->m_ie_i = 0;
+dut->u_ie_i = 0;
+dut->current_priv_lvl_i = 0;
+
+Purpose: Ensure the DUT starts in a known state.
+Expected Output: All outputs should be inactive or zero. irq_req_ctrl_o, irq_sec_ctrl_o, irq_id_ctrl_o, and irq_wu_ctrl_o should be 0.
+Test Case 1: Issue a Non-Secure Interrupt
+
+Cycle: 1
+
+
+dut->irq_i = 1 << 3; // Interrupt at position 3
+dut->irq_sec_i = 0;
+dut->mie_bypass_i = 1 << 3; // Enable interrupt at position 3
+dut->m_ie_i = 1;
+dut->u_ie_i = 0;
+dut->current_priv_lvl_i = 3; // Machine mode
+
+Purpose: Verify that the interrupt controller correctly processes a non-secure interrupt.
+Expected Output: irq_req_ctrl_o should be 1, irq_id_ctrl_o should be 3, irq_sec_ctrl_o should be 0.
+Test Case 2: Issue a Secure Interrupt
+
+Cycle: 2
+
+
+
+dut->irq_i = 1 << 7; // Interrupt at position 7
+dut->irq_sec_i = 1;
+dut->mie_bypass_i = 1 << 7; // Enable interrupt at position 7
+dut->m_ie_i = 1;
+dut->u_ie_i = 0;
+dut->current_priv_lvl_i = 3; // Machine mode
+
+Purpose: Verify that the interrupt controller correctly processes a secure interrupt.
+Expected Output: irq_req_ctrl_o should be 1, irq_id_ctrl_o should be 7, irq_sec_ctrl_o should be 1.
+Test Case 3: Issue Multiple Interrupts
+
+Cycle: 3
+
+
+
+dut->irq_i = (1 << 3) | (1 << 7); // Interrupts at positions 3 and 7
+dut->irq_sec_i = 1;
+dut->mie_bypass_i = (1 << 3) | (1 << 7); // Enable interrupts at positions 3 and 7
+dut->m_ie_i = 1;
+dut->u_ie_i = 0;
+dut->current_priv_lvl_i = 3; // Machine mode
+
+Purpose: Verify that the interrupt controller correctly processes multiple interrupts and prioritizes them.
+Expected Output: irq_req_ctrl_o should be 1, irq_id_ctrl_o should be 7 (since 7 has higher priority), irq_sec_ctrl_o should be 1.
+Test Case 4: Disable Global Interrupt
+
+Cycle: 4
+
+
+dut->irq_i = 1 << 3; // Interrupt at position 3
+dut->irq_sec_i = 0;
+dut->mie_bypass_i = 1 << 3; // Enable interrupt at position 3
+dut->m_ie_i = 0;
+dut->u_ie_i = 0;
+dut->current_priv_lvl_i = 3; // Machine mode
+
+Purpose: Verify that the interrupt controller correctly handles the case when global interrupts are disabled.
+Expected Output: irq_req_ctrl_o should be 0, irq_id_ctrl_o should be 3, irq_sec_ctrl_o should be 0.
+Test Case 5: Issue an Interrupt in User Mode
+
+Cycle: 5
+
+
+
+dut->irq_i = 1 << 3; // Interrupt at position 3
+dut->irq_sec_i = 0;
+dut->mie_bypass_i = 1 << 3; // Enable interrupt at position 3
+dut->m_ie_i = 0;
+dut->u_ie_i = 1;
+dut->current_priv_lvl_i = 0; // User mode
+
+Purpose: Verify that the interrupt controller correctly processes an interrupt in user mode.
+Expected Output: irq_req_ctrl_o should be 1, irq_id_ctrl_o should be 3, irq_sec_ctrl_o should be 0.

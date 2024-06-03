@@ -1,0 +1,139 @@
+Test Case 0: Initial State with No Operations
+
+Cycle: 0
+
+
+
+dut->req_i = 0;
+dut->branch_i = 0;
+dut->branch_addr_i = 0;
+dut->hwlp_jump_i = 0;
+dut->hwlp_target_i = 0;
+dut->fetch_ready_i = 0;
+dut->instr_gnt_i = 0;
+dut->instr_rdata_i = 0;
+dut->instr_rvalid_i = 0;
+dut->instr_err_i = 0;
+dut->instr_err_pmp_i = 0;
+
+Purpose: Ensure the DUT starts in a known state.
+Expected Output: All outputs should be inactive or zero. fetch_valid_o and busy_o should be 0.
+Test Case 1: Issue a Fetch Request
+
+Cycle: 1
+
+
+
+dut->req_i = 1;
+dut->branch_i = 0;
+dut->branch_addr_i = 0;
+dut->hwlp_jump_i = 0;
+dut->hwlp_target_i = 0;
+dut->fetch_ready_i = 1;
+dut->instr_gnt_i = 1;
+dut->instr_rdata_i = 0x12345678;
+dut->instr_rvalid_i = 1;
+dut->instr_err_i = 0;
+dut->instr_err_pmp_i = 0;
+
+Purpose: Verify that the prefetch buffer correctly processes a fetch request.
+Expected Output: instr_req_o should be 1. fetch_valid_o should be 1, and fetch_rdata_o should be 0x12345678.
+Test Case 2: Issue a Branch Request
+
+Cycle: 2
+
+
+
+dut->req_i = 1;
+dut->branch_i = 1;
+dut->branch_addr_i = 0x1000;
+dut->hwlp_jump_i = 0;
+dut->hwlp_target_i = 0;
+dut->fetch_ready_i = 1;
+dut->instr_gnt_i = 1;
+dut->instr_rdata_i = 0;
+dut->instr_rvalid_i = 0;
+dut->instr_err_i = 0;
+dut->instr_err_pmp_i = 0;
+
+Purpose: Verify that the prefetch buffer correctly processes a branch request.
+Expected Output: instr_req_o should be 1, instr_addr_o should be 0x1000, fetch_valid_o should be 0.
+Test Case 3: Handle Branch Request Response
+
+Cycle: 3
+
+
+
+dut->req_i = 1;
+dut->branch_i = 0;
+dut->branch_addr_i = 0x1000;
+dut->hwlp_jump_i = 0;
+dut->hwlp_target_i = 0;
+dut->fetch_ready_i = 1;
+dut->instr_gnt_i = 1;
+dut->instr_rdata_i = 0xCAFEBABE;
+dut->instr_rvalid_i = 1;
+dut->instr_err_i = 0;
+dut->instr_err_pmp_i = 0;
+
+Purpose: Verify that the prefetch buffer correctly handles the response to a branch request.
+Expected Output: fetch_valid_o should be 1, and fetch_rdata_o should be 0xCAFEBABE.
+Test Case 4: Issue a Hardware Loop Jump Request
+
+Cycle: 4
+
+
+
+dut->req_i = 1;
+dut->branch_i = 0;
+dut->branch_addr_i = 0;
+dut->hwlp_jump_i = 1;
+dut->hwlp_target_i = 0x2000;
+dut->fetch_ready_i = 1;
+dut->instr_gnt_i = 1;
+dut->instr_rdata_i = 0;
+dut->instr_rvalid_i = 0;
+dut->instr_err_i = 0;
+dut->instr_err_pmp_i = 0;
+
+Purpose: Verify that the prefetch buffer correctly processes a hardware loop jump request.
+Expected Output: instr_req_o should be 1, instr_addr_o should be 0x2000, fetch_valid_o should be 0.
+Test Case 5: Handle Hardware Loop Jump Request Response
+
+Cycle: 5
+
+
+
+dut->req_i = 1;
+dut->branch_i = 0;
+dut->branch_addr_i = 0;
+dut->hwlp_jump_i = 0;
+dut->hwlp_target_i = 0x2000;
+dut->fetch_ready_i = 1;
+dut->instr_gnt_i = 1;
+dut->instr_rdata_i = 0xDEADBEEF;
+dut->instr_rvalid_i = 1;
+dut->instr_err_i = 0;
+dut->instr_err_pmp_i = 0;
+
+Purpose: Verify that the prefetch buffer correctly handles the response to a hardware loop jump request.
+Expected Output: fetch_valid_o should be 1, and fetch_rdata_o should be 0xDEADBEEF.
+Test Case 6: Issue a Fetch Request and Simulate an Instruction Bus Error
+
+Cycle: 6
+
+
+dut->req_i = 1;
+dut->branch_i = 0;
+dut->branch_addr_i = 0;
+dut->hwlp_jump_i = 0;
+dut->hwlp_target_i = 0;
+dut->fetch_ready_i = 1;
+dut->instr_gnt_i = 1;
+dut->instr_rdata_i = 0;
+dut->instr_rvalid_i = 1;
+dut->instr_err_i = 1;
+dut->instr_err_pmp_i = 0;
+
+Purpose: Verify that the prefetch buffer correctly handles an instruction bus error.
+Expected Output: fetch_valid_o should be 0 due to the error, and busy_o should reflect the ongoing fetch.

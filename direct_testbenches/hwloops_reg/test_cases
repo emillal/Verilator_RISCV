@@ -1,0 +1,126 @@
+Test Case 0: Initial State with No Operations
+
+Cycle: 0
+
+cpp
+
+dut->hwlp_start_data_i = 0;
+dut->hwlp_end_data_i = 0;
+dut->hwlp_cnt_data_i = 0;
+dut->hwlp_we_i = 0;
+dut->hwlp_regid_i = 0;
+dut->valid_i = 0;
+dut->hwlp_dec_cnt_i = 0;
+
+Purpose: Ensure the DUT starts in a known state.
+Expected Output: All internal registers (hwlp_start_q, hwlp_end_q, hwlp_counter_q) should be initialized to 0. No changes should occur since hwlp_we_i and hwlp_dec_cnt_i are 0.
+Test Case 1: Write Start Address to Register 0
+
+Cycle: 1
+
+cpp
+
+dut->hwlp_start_data_i = 0x1000;
+dut->hwlp_we_i = 1;
+dut->hwlp_regid_i = 0;
+dut->valid_i = 1;
+dut->hwlp_dec_cnt_i = 0;
+
+Purpose: Verify that the start address is correctly written to register 0.
+Expected Output: hwlp_start_q[0] should be updated to 0x1000. Other registers remain unchanged.
+Test Case 2: Write End Address to Register 0
+
+Cycle: 2
+
+cpp
+
+dut->hwlp_end_data_i = 0x2000;
+dut->hwlp_we_i = 2;
+dut->hwlp_regid_i = 0;
+dut->valid_i = 1;
+dut->hwlp_dec_cnt_i = 0;
+
+Purpose: Verify that the end address is correctly written to register 0.
+Expected Output: hwlp_end_q[0] should be updated to 0x2000. Other registers remain unchanged.
+Test Case 3: Write Counter to Register 0
+
+Cycle: 3
+
+cpp
+
+dut->hwlp_cnt_data_i = 10;
+dut->hwlp_we_i = 4;
+dut->hwlp_regid_i = 0;
+dut->valid_i = 1;
+dut->hwlp_dec_cnt_i = 0;
+
+Purpose: Verify that the counter value is correctly written to register 0.
+Expected Output: hwlp_counter_q[0] should be updated to 10. Other registers remain unchanged.
+Test Case 4: Decrement Counter in Register 0
+
+Cycle: 4
+
+cpp
+
+dut->hwlp_we_i = 0;
+dut->hwlp_regid_i = 0;
+dut->valid_i = 1;
+dut->hwlp_dec_cnt_i = 1;
+
+Purpose: Verify that the counter in register 0 is correctly decremented.
+Expected Output: hwlp_counter_q[0] should be decremented by 1, resulting in 9. Other registers remain unchanged.
+Test Case 5: Write Start Address to Register 1
+
+Cycle: 5
+
+cpp
+
+dut->hwlp_start_data_i = 0x3000;
+dut->hwlp_we_i = 1;
+dut->hwlp_regid_i = 1;
+dut->valid_i = 1;
+dut->hwlp_dec_cnt_i = 0;
+
+Purpose: Verify that the start address is correctly written to register 1.
+Expected Output: hwlp_start_q[1] should be updated to 0x3000. Other registers remain unchanged.
+Test Case 6: Write End Address to Register 1
+
+Cycle: 6
+
+cpp
+
+dut->hwlp_end_data_i = 0x4000;
+dut->hwlp_we_i = 2;
+dut->hwlp_regid_i = 1;
+dut->valid_i = 1;
+dut->hwlp_dec_cnt_i = 0;
+
+Purpose: Verify that the end address is correctly written to register 1.
+Expected Output: hwlp_end_q[1] should be updated to 0x4000. Other registers remain unchanged.
+Test Case 7: Write Counter to Register 1
+
+Cycle: 7
+
+cpp
+
+dut->hwlp_cnt_data_i = 5;
+dut->hwlp_we_i = 4;
+dut->hwlp_regid_i = 1;
+dut->valid_i = 1;
+dut->hwlp_dec_cnt_i = 0;
+
+Purpose: Verify that the counter value is correctly written to register 1.
+Expected Output: hwlp_counter_q[1] should be updated to 5. Other registers remain unchanged.
+Test Case 8: Decrement Counter in Register 1
+
+Cycle: 8
+
+cpp
+
+dut->hwlp_we_i = 0;
+dut->hwlp_regid_i = 1;
+dut->valid_i = 1;
+dut->hwlp_dec_cnt_i = 2;
+
+Purpose: Verify that the counter in register 1 is correctly decremented.
+Expected Output: hwlp_counter_q[1] should be decremented by 1, resulting in 4. Other registers remain unchanged.

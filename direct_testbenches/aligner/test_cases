@@ -1,0 +1,100 @@
+ Test Case 1
+
+Inputs:
+- `fetch_valid_i = 1`
+- `if_valid_i = 0`
+- `fetch_rdata_i = 0x12345678`
+- `branch_i = 0`
+- `branch_addr_i = 0`
+- `hwlp_update_pc_i = 0`
+- `hwlp_addr_i = 0`
+
+Expected Outputs:
+- `instr_aligned_o = 0x12345678` (instruction is aligned)
+- `instr_valid_o = 1` (fetch_valid_i is 1)
+- `aligner_ready_o = 1` (initial state, ready)
+- `pc_o` will increment by 4 (pc_n = pc_q + 4)
+
+ Test Case 2
+
+Inputs:
+- `fetch_valid_i = 0`
+- `if_valid_i = 1`
+- `fetch_rdata_i = 0x9abcdef0`
+- `branch_i = 1`
+- `branch_addr_i = 0x1000`
+- `hwlp_update_pc_i = 0`
+- `hwlp_addr_i = 0`
+
+Expected Outputs:
+- `instr_aligned_o = 0x9abcdef0` (branch misaligned with address having 01 as two LSBs)
+- `instr_valid_o = 0` (fetch_valid_i is 0)
+- `aligner_ready_o = 1` (ready state)
+- `pc_o` updated to `branch_addr_i` which is 0x1000
+
+ Test Case 3
+
+Inputs:**
+- `fetch_valid_i = 1`
+- `if_valid_i = 1`
+- `fetch_rdata_i = 0xffffffff`
+- `branch_i = 0`
+- `branch_addr_i = 0`
+- `hwlp_update_pc_i = 1`
+- `hwlp_addr_i = 0x2000`
+
+**Expected Outputs:**
+- `instr_aligned_o = 0xffffffff` (instruction aligned)
+- `instr_valid_o = 1` (fetch_valid_i is 1)
+- `aligner_ready_o = 1` (aligned state)
+- `pc_o` updated to `hwlp_addr_i` which is 0x2000
+
+ Test Case 4
+Inputs:
+- `fetch_valid_i = 0`
+- `if_valid_i = 0`
+- `fetch_rdata_i = 0x00000000`
+- `branch_i = 1`
+- `branch_addr_i = 0x3000`
+- `hwlp_update_pc_i = 1`
+- `hwlp_addr_i = 0x4000`
+
+Expected Outputs:
+- `instr_aligned_o = 0x00000000` (branch misaligned)
+- `instr_valid_o = 0` (fetch_valid_i is 0)
+- `aligner_ready_o = 1` (misaligned state)
+- `pc_o` updated to `branch_addr_i` which is 0x3000 and then `hwlp_addr_i` which is 0x4000
+
+ Test Case 5
+
+Inputs:
+- `fetch_valid_i = 1`
+- `if_valid_i = 0`
+- `fetch_rdata_i = 0x11111111`
+- `branch_i = 1`
+- `branch_addr_i = 0x5000`
+- `hwlp_update_pc_i = 0`
+- `hwlp_addr_i = 0x6000`
+
+Expected Outputs:
+- `instr_aligned_o = 0x11111111` (aligned state)
+- `instr_valid_o = 1` (fetch_valid_i is 1)
+- `aligner_ready_o = 1` (aligned state)
+- `pc_o` updated to `branch_addr_i` which is 0x5000
+
+ Test Case 6
+
+Inputs:
+- `fetch_valid_i = 0`
+- `if_valid_i = 1`
+- `fetch_rdata_i = 0x22222222`
+- `branch_i = 0`
+- `branch_addr_i = 0x7000`
+- `hwlp_update_pc_i = 1`
+- `hwlp_addr_i = 0x8000`
+
+Expected Outputs:
+- `instr_aligned_o = 0x22222222` (aligned state)
+- `instr_valid_o = 0` (fetch_valid_i is 0)
+- `aligner_ready_o = 1` (aligned state)
+- `pc_o` updated to `hwlp_addr_i` which is 0x8000

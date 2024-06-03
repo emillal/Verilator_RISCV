@@ -1,0 +1,57 @@
+Test Case 1
+
+
+
+dut->scan_cg_en_i = 1;
+dut->fetch_enable_i = 0;
+dut->if_busy_i = 1;
+dut->ctrl_busy_i = 0;
+dut->lsu_busy_i = 0;
+dut->apu_busy_i = 0;
+dut->pulp_clock_en_i = 0;
+dut->p_elw_start_i = 0;
+dut->p_elw_finish_i = 0;
+dut->debug_p_elw_no_sleep_i = 0;
+dut->wake_from_sleep_i = 1;
+
+Purpose: This test case changes the conditions to:
+
+    The clock gate scan enable is active.
+    The fetch enable is inactive.
+    The instruction fetch unit is busy.
+    The wake from sleep signal is active.
+
+Expected Behavior:
+
+    The core should not enter sleep because if_busy_i is active, indicating that the instruction fetch unit is still busy.
+    The clock should remain ungated since if_busy_i is active, requiring the clock to remain running.
+
+Test Case 2
+
+
+
+dut->scan_cg_en_i = 0;
+dut->fetch_enable_i = 1;
+dut->if_busy_i = 0;
+dut->ctrl_busy_i = 1;
+dut->lsu_busy_i = 0;
+dut->apu_busy_i = 1;
+dut->pulp_clock_en_i = 1;
+dut->p_elw_start_i = 1;
+dut->p_elw_finish_i = 0;
+dut->debug_p_elw_no_sleep_i = 1;
+dut->wake_from_sleep_i = 0;
+
+Purpose: This test case modifies the conditions to:
+
+    The clock gate scan enable is disabled.
+    The fetch enable is active.
+    The instruction fetch unit is not busy, but the control unit and APU are busy.
+    The PULP clock enable and p.elw start signals are active.
+    The debug no sleep signal is active, preventing the core from sleeping for debugging purposes.
+    The wake from sleep signal is inactive.
+
+Expected Behavior:
+
+    The core should not enter sleep because ctrl_busy_i and apu_busy_i are active, indicating that core components are still operational.
+    The clock should remain ungated due to the active ctrl_busy_i and apu_busy_i signals, as well as the active pulp_clock_en_i and p_elw_start_i signals.

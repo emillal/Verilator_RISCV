@@ -1,0 +1,56 @@
+Detailed Test Cases
+Test Case 1: Unsigned Division
+Inputs:
+OpA_DI: 50
+OpB_DI: 10
+OpBShift_DI: 5 (not used in this case)
+OpBIsZero_SI: 0
+OpBSign_SI: 0
+OpCode_SI: 0 (unsigned division)
+InVld_SI: 1
+OutRdy_SI: 1
+Expected Outputs:
+Res_DO: 5 (since 50 / 10 = 5)
+OutVld_SO: 1 (result is valid)
+
+Test Case 2: Signed Division
+Inputs:
+OpA_DI: 50
+OpB_DI: -10
+OpBShift_DI: 5 (not used in this case)
+OpBIsZero_SI: 0
+OpBSign_SI: 1
+OpCode_SI: 1 (signed division)
+InVld_SI: 1
+OutRdy_SI: 1
+Expected Outputs:
+Res_DO: -5 (since 50 / -10 = -5)
+OutVld_SO: 1 (result is valid)
+
+Test Case 3: Unsigned Remainder
+Inputs:
+OpA_DI: 50
+OpB_DI: 7
+OpBShift_DI: 3 (not used in this case)
+OpBIsZero_SI: 0
+OpBSign_SI: 0
+OpCode_SI: 2 (unsigned remainder)
+InVld_SI: 1
+OutRdy_SI: 1
+Expected Outputs:
+Res_DO: 1 (since 50 % 7 = 1)
+OutVld_SO: 1 (result is valid)
+
+Test Case 4: Signed Remainder
+Inputs:
+OpA_DI: 50
+OpB_DI: -7
+OpBShift_DI: 3 (not used in this case)
+OpBIsZero_SI: 0
+OpBSign_SI: 1
+OpCode_SI: 3 (signed remainder)
+InVld_SI: 1
+OutRdy_SI: 1
+Expected Outputs:
+Res_DO: 1 (since 50 % -7 = 1, taking the sign of the divisor in signed division)
+OutVld_SO: 1 (result is valid)

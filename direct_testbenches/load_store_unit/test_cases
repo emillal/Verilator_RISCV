@@ -1,0 +1,156 @@
+Test Case 0: Initial State with No Operations
+
+Cycle: 0
+
+
+
+dut->data_we_ex_i = 0;
+dut->data_type_ex_i = 0;
+dut->data_wdata_ex_i = 0;
+dut->data_reg_offset_ex_i = 0;
+dut->data_load_event_ex_i = 0;
+dut->data_sign_ext_ex_i = 0;
+dut->data_req_ex_i = 0;
+dut->operand_a_ex_i = 0;
+dut->operand_b_ex_i = 0;
+dut->addr_useincr_ex_i = 0;
+dut->data_misaligned_ex_i = 0;
+dut->data_atop_ex_i = 0;
+dut->data_gnt_i = 0;
+dut->data_rvalid_i = 0;
+dut->data_err_i = 0;
+dut->data_err_pmp_i = 0;
+dut->data_rdata_i = 0;
+
+Purpose: Ensure the DUT starts in a known state.
+Expected Output: All outputs should be inactive or zero. data_rdata_ex_o and busy_o should be 0.
+Test Case 1: Issue a Store Request
+
+Cycle: 1
+
+
+
+dut->data_we_ex_i = 1;
+dut->data_type_ex_i = 0; // Word
+dut->data_wdata_ex_i = 0xDEADBEEF;
+dut->data_reg_offset_ex_i = 0;
+dut->data_load_event_ex_i = 0;
+dut->data_sign_ext_ex_i = 0;
+dut->data_req_ex_i = 1;
+dut->operand_a_ex_i = 0x1000;
+dut->operand_b_ex_i = 0;
+dut->addr_useincr_ex_i = 0;
+dut->data_misaligned_ex_i = 0;
+dut->data_atop_ex_i = 0;
+dut->data_gnt_i = 1;
+dut->data_rvalid_i = 0;
+dut->data_err_i = 0;
+dut->data_err_pmp_i = 0;
+dut->data_rdata_i = 0;
+
+Purpose: Verify that the load/store unit correctly processes a store request.
+Expected Output: data_req_o should be 1, data_addr_o should be 0x1000, data_we_o should be 1.
+Test Case 2: Issue a Load Request
+
+Cycle: 2
+
+cpp
+
+dut->data_we_ex_i = 0;
+dut->data_type_ex_i = 0; // Word
+dut->data_wdata_ex_i = 0;
+dut->data_reg_offset_ex_i = 0;
+dut->data_load_event_ex_i = 1;
+dut->data_sign_ext_ex_i = 0;
+dut->data_req_ex_i = 1;
+dut->operand_a_ex_i = 0x1004;
+dut->operand_b_ex_i = 0;
+dut->addr_useincr_ex_i = 0;
+dut->data_misaligned_ex_i = 0;
+dut->data_atop_ex_i = 0;
+dut->data_gnt_i = 1;
+dut->data_rvalid_i = 1;
+dut->data_err_i = 0;
+dut->data_err_pmp_i = 0;
+dut->data_rdata_i = 0xCAFEBABE;
+
+Purpose: Verify that the load/store unit correctly processes a load request.
+Expected Output: data_req_o should be 1, data_addr_o should be 0x1004, data_we_o should be 0, data_rdata_ex_o should be 0xCAFEBABE.
+Test Case 3: Handle Load Response
+
+Cycle: 3
+
+
+
+dut->data_we_ex_i = 0;
+dut->data_type_ex_i = 0; // Word
+dut->data_wdata_ex_i = 0;
+dut->data_reg_offset_ex_i = 0;
+dut->data_load_event_ex_i = 1;
+dut->data_sign_ext_ex_i = 0;
+dut->data_req_ex_i = 0;
+dut->operand_a_ex_i = 0;
+dut->operand_b_ex_i = 0;
+dut->addr_useincr_ex_i = 0;
+dut->data_misaligned_ex_i = 0;
+dut->data_atop_ex_i = 0;
+dut->data_gnt_i = 0;
+dut->data_rvalid_i = 1;
+dut->data_err_i = 0;
+dut->data_err_pmp_i = 0;
+dut->data_rdata_i = 0xCAFEBABE;
+
+Purpose: Verify that the load/store unit correctly handles the response to a load request.
+Expected Output: data_rdata_ex_o should be 0xCAFEBABE.
+Test Case 4: Issue a Misaligned Load Request
+
+Cycle: 4
+
+cpp
+
+dut->data_we_ex_i = 0;
+dut->data_type_ex_i = 0; // Word
+dut->data_wdata_ex_i = 0;
+dut->data_reg_offset_ex_i = 0;
+dut->data_load_event_ex_i = 1;
+dut->data_sign_ext_ex_i = 0;
+dut->data_req_ex_i = 1;
+dut->operand_a_ex_i = 0x1003;
+dut->operand_b_ex_i = 0;
+dut->addr_useincr_ex_i = 0;
+dut->data_misaligned_ex_i = 1;
+dut->data_atop_ex_i = 0;
+dut->data_gnt_i = 1;
+dut->data_rvalid_i = 0;
+dut->data_err_i = 0;
+dut->data_err_pmp_i = 0;
+dut->data_rdata_i = 0;
+
+Purpose: Verify that the load/store unit correctly processes a misaligned load request.
+Expected Output: data_req_o should be 1, data_addr_o should be 0x1000, data_we_o should be 0, data_misaligned_o should be 1.
+Test Case 5: Handle Misaligned Load Response
+
+Cycle: 5
+
+cpp
+
+dut->data_we_ex_i = 0;
+dut->data_type_ex_i = 0; // Word
+dut->data_wdata_ex_i = 0;
+dut->data_reg_offset_ex_i = 0;
+dut->data_load_event_ex_i = 1;
+dut->data_sign_ext_ex_i = 0;
+dut->data_req_ex_i = 0;
+dut->operand_a_ex_i = 0;
+dut->operand_b_ex_i = 0;
+dut->addr_useincr_ex_i = 0;
+dut->data_misaligned_ex_i = 1;
+dut->data_atop_ex_i = 0;
+dut->data_gnt_i = 1;
+dut->data_rvalid_i = 1;
+dut->data_err_i = 0;
+dut->data_err_pmp_i = 0;
+dut->data_rdata_i = 0xDEADBEEF;
+
+Purpose: Verify that the load/store unit correctly handles the response to a misaligned load request.
+Expected Output: data_rdata_ex_o should be 0xDEADBEEF.
